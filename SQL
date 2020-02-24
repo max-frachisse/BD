@@ -284,6 +284,25 @@ Join Bungalows B ON B.idBungalow=L.idBungalow
 Join Campings Ci ON Ci.idCamping=B.idCamping
 where C.villeClient=Ci.villeCamping;
 
+R41
+Select nomEmploye
+From Employes
+where idCamping is null;
+
+
+
+R42
+Select count(B.idBungalow)
+from Bungalows B Join Campings C ON C.idCamping=B.idCamping
+Join Locations L On L.idBungalow=B.idBungalow
+join Clients Cl On Cl.idClient=L.idClient
+where nomCamping='La Décharge Monochrome'  and nomClient='Zeblouse';
+
+
+R43
+Select nomClient,prenomClient
+from Clients C Join Locations L ON c.idClient=L.idClient
+
 
 
 
