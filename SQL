@@ -1,0 +1,305 @@
+FRACHISSE MAX S2
+
+
+
+R11
+SELECT nomEmploye,prenomEmploye
+From Employes
+where salaireEmploye>2000;
+
+
+
+R12
+SELECT nomCamping
+From Campings
+where villeCamping='Palavas' and nbEtoilesCamping=5;
+
+
+
+R13
+SELECT nomEmploye,prenomEmploye,salaireEmploye
+FROM Employes E,Campings C
+WHERE E.idCamping=C.idCamping and C.nomCamping='Les Flots Bleus';
+order by salaireEmploye
+
+
+R14
+SELECT E.nomEmploye,E.prenomEmploye
+From Employes E,Employes E1
+where E.idEmploye=E1.idEmploye and E1.idEmployeChef in 
+(select idEmploye
+From Employes 
+where Employes.nomEmploye='Alizan' and Employes.prenomEmploye='Gaspard');
+
+
+
+R15
+SELECT C.nomClient,C.prenomClient
+From Clients C JOIN Locations L ON C.idClient=L.idClient
+Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings CAP ON CAP.idCamping=B.idCamping
+Where CAP.nomCamping='Les Flots Bleus' and '14/07/2017' BETWEEN L.dateDebut AND L.dateFin;
+
+
+
+R16
+SELECT DISTINCT C.nomClient,C.prenomClient
+From Clients C JOIN Locations L ON C.idClient=L.idClient
+Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings CAP ON CAP.idCamping=B.idCamping
+Where CAP.nomCamping='Les Flots Bleus' and L.dateDebut < '31/07/2017' AND L.dateFin > '01/07/2017';
+
+
+
+R17
+Select nomClient,prenomClient
+from Clients Clt
+Where Clt.villeClient in (select villeCamping from Campings)
+
+
+
+R18
+SELECT count(S.idService)
+FROM Services S JOIN Proposer P ON P.idService=S.idService
+Join Bungalows B ON B.idBungalow=P.idBungalow
+Join Campings C ON C.idCamping=B.idCamping 
+where B.nomBungalow='Le Titanic';
+
+
+
+R19
+SELECT max(salaireEmploye)
+From Employes E JOIN Campings C ON C.idCamping=E.idCamping
+where C.nomCamping='Les Flots Bleus';
+
+
+
+R20
+SELECT COUNT(DISTINCT C.IDCAMPING) AS NB_CAMPINGS FROM LOCATIONS L JOIN CLIENTS CLT ON L.IDCLIENT = CLT.IDCLIENT JOIN BUNGALOWS B ON L.IDBUNGALOW = B.IDBUNGALOW JOIN CAMPINGS C ON B.IDCAMPING = C.IDCAMPING WHERE CLT.NOMCLIENT = 'Zeblouse' AND CLT.PRENOMCLIENT = 'Agathe'
+
+
+
+R21
+SELECT nomBungalow
+FROM Bungalows
+where superficieBungalow in (
+select max(superficieBungalow)
+From Bungalows)
+
+
+
+R22
+SELECT nomEmploye,prenomEmploye
+FROM Employes E Join Campings C ON C.idCamping=E.idCamping
+where C.nomCamping='Les Flots Bleus' and E.salaireEmploye in 
+(select min(salaireEmploye)
+FROM Employes E Join Campings C ON C.idCamping=E.idCamping
+where C.nomCamping='Les Flots Bleus');
+
+
+
+R23
+select nomBungalow
+From Bungalows
+where idBungalow not in (
+SELECT B.idBungalow
+FROM Bungalows B Join Proposer P ON B.idBungalow=P.idBungalow);
+
+
+méthode 2:
+select nomBungalow from Bungalows B where idBungalow in ((select idBungalow from Bungalows) minus (select idBungalow from Proposer))
+
+
+
+R24
+Select nomEmploye,prenomEmploye from Employes where idEmploye in (select idEmploye from Employes minus (select idEmployeChef from Employes))
+
+
+
+R25
+SELECT NOMBUNGALOW FROM BUNGALOWS WHERE IDBUNGALOW NOT IN (SELECT IDBUNGALOW FROM PROPOSER P JOIN SERVICES S ON P.IDSERVICE = S.IDSERVICE WHERE NOMSERVICE = 'Climatisation' UNION (SELECT IDBUNGALOW FROM PROPOSER P JOIN SERVICES S ON P.IDSERVICE = S.IDSERVICE WHERE NOMSERVICE = 'TV'))
+
+
+SELECT nomBungalow
+FROM Bungalows
+WHERE idBungalow IN (SELECT idBungalow
+FROM Bungalows
+MINUS
+SELECT idBungalow
+FROM Proposer p
+JOIN Services
+WHERE nomService =
+MINUS
+SELECT idBungalow
+FROM Proposer p
+JOIN Services
+WHERE nomService =
+Ou
+s ON p.idService = s.idService
+'Climatisation'
+s ON p.idService = s.idService
+'TV');
+
+
+
+R26
+SELECT nomService
+FROM Services
+WHERE idService IN (SELECT idService
+FROM Campings c
+JOIN Bungalows b ON c.idCamping = b.idCamping
+JOIN Proposer p ON b.idBungalow = p.idBungalow
+WHERE nomCamping = 'La Décharge Monochrome'
+INTERSECT
+SELECT idService
+FROM Campings c
+JOIN Bungalows b ON c.idCamping = b.idCamping
+JOIN Proposer p ON b.idBungalow = p.idBungalow
+WHERE nomCamping = 'The White Majestic');
+
+
+
+R27
+SELECT nomClient, prenomClient
+FROM Clients
+WHERE idClient IN (SELECT idClient
+FROM Locations l
+JOIN Bungalows b ON l.idBungalow = b.idBungalow
+JOIN Campings c ON b.idCamping = c.idCamping
+WHERE nomCamping = 'The White Majestic'
+UNION
+SELECT idClient
+FROM Locations l
+JOIN Bungalows b ON l.idBungalow = b.idBungalow
+JOIN Campings c ON b.idCamping = c.idCamping
+WHERE nomCamping = 'La Décharge Monochrome')
+ORDER BY nomClient, prenomClient ;
+
+
+
+R28
+SELECT nomEmploye, prenomEmploye, nomCamping
+FROM Employes e
+JOIN Campings c ON e.idCamping = c.idCamping
+UNION
+SELECT nomEmploye, prenomEmploye, 'Pas affecté à un camping'
+FROM Employes e
+WHERE idCamping IS NULL
+ORDER BY nomEmploye;
+
+
+
+R29
+SELECT nomClient, prenomClient
+FROM Clients c1
+JOIN Locations l1 ON c1.idClient = l1.idClient
+JOIN Bungalows b1 ON l1.idBungalow = b1.idBungalow
+WHERE EXISTS (SELECT *
+FROM Clients c2
+JOIN Locations l2 ON c2.idClient = l2.idClient
+JOIN Bungalows b2 ON l2.idBungalow = b2.idBungalow
+WHERE nomClient = 'Bricot'
+AND prenomClient = 'Judas'
+AND b1.idCamping = b2.idCamping
+AND l1.dateFin >= l2.dateDebut
+AND l1.dateDebut <= l2.dateFin
+AND c1.idClient != c2.idClient);
+
+R30
+Select nomBungalow
+From Bungalows
+where idBungalow not in 
+(Select idBungalow
+from Locations);
+
+Select nomBungalow
+From Bungalows
+where idBungalow in
+(Select idBungalow
+from Bungalows
+Minus
+Select idBungalow
+from Locations);
+
+Select nomBungalow
+From Bungalows B
+where  not Exists
+(Select *
+from Bungalows B Join Locations L On B.idBungalow=L.idBungalow
+where B.idBungalow=L.idBungalow); FAUX
+
+
+R31
+Select nomCamping
+from Campings
+where idCamping in 
+(Select idCamping
+From Campings
+Minus
+Select idCamping
+From Employes);
+
+
+R32
+Select nomService
+from Services
+where categorieService='Loisir' 
+Union
+Select nomService
+from Services
+where nomService not in
+(Select nomService
+from Services S Join Proposer P On P.idService=S.idService
+Join Bungalows B ON B.idBungalow=P.idBungalow
+Join Campings C ON C.idCamping=B.idCamping
+where nomCamping='The White Majestic');
+
+
+R33
+select Distinct nomClient
+from locations L JOIN Bungalows B ON B.idBungalow=L.idBungalow
+Join Clients ON Clients.idClient=L.idClient
+where superficieBungalow >58 
+Minus
+select Distinct nomClient
+from locations L JOIN Bungalows B ON B.idBungalow=L.idBungalow
+Join Clients ON Clients.idClient=L.idClient
+where superficieBungalow < 58 ;
+
+R34
+select nomClient
+from Clients C Join Locations L ON C.idClient=L.idClient
+where idBungalow not in
+(Select idBungalow
+From Bungalows 
+Minus
+(Select Bungalows.idBungalow
+From Bungalows Join Proposer P ON Bungalows.idBungalow=P.idBungalow))
+and villeClient='Montpellier';
+
+R40
+Select Distinct C.idClient,nomClient,prenomClient
+from Clients C Join Locations L ON L.idClient=C.idClient
+Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings Ci ON Ci.idCamping=B.idCamping
+where C.villeClient=Ci.villeCamping;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
