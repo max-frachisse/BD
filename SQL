@@ -304,7 +304,37 @@ Select nomClient,prenomClient
 from Clients C Join Locations L ON c.idClient=L.idClient
 
 
+R45
+Select idLocation
+from Locations L
+where dateFin-dateDebut in
+(select max(dateFin-dateDebut)
+from Locations L Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings C On C.idCamping=B.idCamping
+where nomCamping='The White Majestic' and dateFin in
+(select distinct max(dateFin)
+from Locations L Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings C On C.idCamping=B.idCamping
+where nomCamping='The White Majestic') and dateDebut in
+(select distinct max(dateDebut)
+from Locations L Join Bungalows B ON B.idBungalow=L.idBungalow
+Join Campings C On C.idCamping=B.idCamping
+where nomCamping='The White Majestic')); 
 
+R47
+select nomClient,prenomClient
+from Clients C Join Locations L ON C.idClient=L.idClient
+Join Bungalows B On B.idbungalow=L.idBungalow
+where dateFin in 
+(select max(dateFin)
+from Locations L Join Bungalows B On B.idBungalow=L.idBungalow
+where  nomBungalow='La Poubelle' );
+
+
+R48
+select Distinct nomClient,prenomClient
+from Clients C Join Locations L ON C.idClient=L.idClient
+where dateFin-dateDebut >10;
 
 
 
