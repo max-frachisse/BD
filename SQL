@@ -338,6 +338,53 @@ where dateFin-dateDebut >10;
 
 
 
+R50
+Select C.nomClient,C.prenomClient,count(idLocation)
+from Clients C Join Locations L ON C.idClient=L.idClient
+group by C.idClient,C.nomClient,C.prenomClient
+order by count(idLocation) DESC
+
+R51
+Select nomCamping,AVG(salaireEmploye)
+from Employes E Join Campings C ON C.idCamping=E.idCamping
+group by nomCamping;
+
+R52
+Select nomCamping
+from Campings C Join Employes E On E.idCamping=C.idCamping
+group by nomCamping
+having count(idEmploye) > 3;
+
+R53
+Select nomCamping
+from Campings C Join Employes E On E.idCamping=C.idCamping
+group by nomCamping
+having AVG(salaireEmploye) > 1400;
+
+R54
+Select C.nomCamping
+from Campings C Join Bungalows B ON B.idCamping=C.idCamping
+where superficieBungalow <65
+group by nomCamping
+order by count(B.superficieBungalow) 
+
+R55
+Select nomCamping
+from Campings C Join Employes E On E.idCamping=C.idCamping
+group by nomCamping;
+having min(salaireEmploye) >= 1000;
+
+R56
+SELECT B.NOMBUNGALOW FROM BUNGALOWS B JOIN PROPOSER P ON B.IDBUNGALOW = P.IDBUNGALOW JOIN SERVICES S ON S.IDSERVICE = P.IDSERVICE GROUP BY(B.NOMBUNGALOW) HAVING COUNT(S.IDSERVICE) = (SELECT COUNT(P.IDSERVICE) FROM BUNGALOWS B JOIN PROPOSER P ON B.IDBUNGALOW = P.IDBUNGALOW JOIN SERVICES S ON S.IDSERVICE = P.IDSERVICE WHERE B.NOMBUNGALOW = 'Le Royal')
+
+
+R57
+select nomBungalow,count(S.idService) as "NB SERVICES"
+from Bungalows B Join Proposer P ON P.idBungalow=B.idBungalow
+Join Services S ON S.idService=P.idService
+group by (nomBungalow)
+order by count(s.idService) DESC
+
 
 
 
